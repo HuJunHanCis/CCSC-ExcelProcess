@@ -26,7 +26,7 @@ def generate_increasing_list(start_height, end_height, n):
 
 class DataList:
 
-    def __init__(self,data_settings,data_type):
+    def __init__(self,data_settings,data_type = "yuredian"):
 
         self.data_list = []
         self.append_list = []
@@ -34,6 +34,7 @@ class DataList:
         self.data_type = data_type
 
         self.y_record = 0
+        self.y_type = -1
         self.g_record = 0
 
     def show_data(self):
@@ -41,13 +42,19 @@ class DataList:
         # 自动生成 X 坐标
         x = list(range(len(self.data_list)))  # X 坐标为 [0, 1, 2, 3, 4]
 
-        # 绘制散点图
-        plt.scatter(x, self.data_list, c='blue', s=100, alpha=0.7, edgecolors='black')
+        # 绘制普通的散点图
+        plt.scatter(x, self.data_list, c='blue', s=100, alpha=0.7, edgecolors='black', label='Laser Points')
+
+        # 特别标记的点
+        plt.scatter(x[self.y_record], self.data_list[self.y_record], c='red', s=150, label=f'Preheat : {self.y_record}')
 
         # 添加标题和坐标轴标签
-        plt.title('Scatter Plot with Single List (Y-axis)')
+        plt.title(f"Preheat Point Value : {self.data_list[self.y_record]}")
         plt.xlabel('Index')
-        plt.ylabel('Value')
+        plt.ylabel('Laser Value Sim')
+
+        # 添加图例
+        plt.legend()
 
         # 显示图表
         plt.show()
@@ -71,7 +78,12 @@ class DataList:
 
         self.data_list.append(ground_h)
 
-        if random.randint(0,2) == 0:
+        if self.y_type != -1:
+            pass
+        else:
+            self.y_type = random.randint(0,2)
+
+        if self.y_type == 0:
 
             for i in range(len_of_y):
 
@@ -84,7 +96,7 @@ class DataList:
                     self.append_list = generate_increasing_list(self.data_list[i], banpi_h, range_of_y)
                     self.data_list += self.append_list
 
-                    self.y_record = i
+                    self.y_record = i + range_of_y
 
                 elif i > start_of_y + len(self.append_list):
 
@@ -93,19 +105,18 @@ class DataList:
                     else:
                         self.data_list.append(self.data_list[i - 1])
 
-
-
     def generate_data_list(self):
 
         print(random.randint(1, 10))
 
 
 
-Excel_Data = DataList(generate_settings,"yuredian")
+Excel_Data = DataList(generate_settings)
+Excel_Data.y_type = 0
 Excel_Data.generate_y()
 Excel_Data.show_data()
+print(Excel_Data.data_list)
 
-# DataList(generate_settings,"goucao")
 
 
 
