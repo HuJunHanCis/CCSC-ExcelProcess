@@ -1,4 +1,5 @@
 import random
+import numpy as np
 from Settings import generate_settings
 import matplotlib.pyplot as plt
 
@@ -78,11 +79,13 @@ class DataList:
 
         self.data_list.append(ground_h)
 
+        # 若已经指定类型则pass
         if self.y_type != -1:
             pass
         else:
             self.y_type = random.randint(0,2)
 
+        # 直角型
         if self.y_type == 0:
 
             for i in range(len_of_y):
@@ -105,18 +108,69 @@ class DataList:
                     else:
                         self.data_list.append(self.data_list[i - 1])
 
+        # 圆弧形
+        elif self.y_type == 1:
+
+            pass
+
+        elif self.y_type == 2:
+
+            pass
+
     def generate_data_list(self):
 
         print(random.randint(1, 10))
 
 
+#
+# Excel_Data = DataList(generate_settings)
+# Excel_Data.y_type = 0
+# Excel_Data.generate_y()
+# Excel_Data.show_data()
+# print(Excel_Data.data_list)
+#
 
-Excel_Data = DataList(generate_settings)
-Excel_Data.y_type = 0
-Excel_Data.generate_y()
-Excel_Data.show_data()
-print(Excel_Data.data_list)
+import numpy as np
 
+def generate_arc_list(start, end, length):
+    """
+    生成一个符合圆弧形且单调的列表
+    :param start: 起始值
+    :param end: 结束值
+    :param length: 列表的长度
+    :return: 圆弧形且单调的列表
+    """
+    # 生成角度，均匀分布在 0 到 π/2 之间
+    # theta = np.random.uniform(0, np.pi / 2, length)
 
+    # 随机生成角度（随机分布）
+    theta = np.sort(np.random.uniform(0, np.pi / 2, length))  # 从 0 到 π/2 的随机角度
+    # theta += np.random.uniform(-1, 1, length)  # 添加角度随机扰动
+    theta = np.clip(theta, 0, np.pi / 2)  # 确保角度范围有效
 
+    # 使用正弦函数生成圆弧形曲线
+    arc_values = np.sin(theta)
 
+    # 将生成的值映射到 [start, end]
+    mapped_values = start + (end - start) * arc_values
+
+    return mapped_values.tolist()
+
+# 示例参数
+start_value = 1000
+end_value = 700
+list_length = 20
+
+# 生成圆弧形单调列表
+result = generate_arc_list(start_value, end_value, list_length)
+
+plt.plot(result, marker='o', label='Arc Curve')
+plt.title('Arc-Shaped List')
+plt.xlabel('Index')
+plt.ylabel('Value')
+plt.legend()
+plt.grid()
+plt.show()
+
+# 打印结果
+print(result)
